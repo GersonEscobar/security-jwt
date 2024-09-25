@@ -5,7 +5,7 @@ import proyecto.dos.security_jwt.models.Usuarios;
 
 import java.util.Optional;
 
-public interface UsuaruiosRepository extends JpaRepository <Usuarios, Long> {
+public interface UsuariosRepository extends JpaRepository <Usuarios, Long> {
 
     Optional<Usuarios> findByUsername(String username);
 
