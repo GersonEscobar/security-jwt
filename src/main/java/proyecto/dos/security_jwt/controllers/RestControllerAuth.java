@@ -21,8 +21,6 @@ import proyecto.dos.security_jwt.repositories.RolRepository;
 import proyecto.dos.security_jwt.repositories.UsuariosRepository;
 import proyecto.dos.security_jwt.security.JwtGenerador;
 
-import javax.management.relation.Role;
-import java.util.Collection;
 import java.util.Collections;
 
 @Controller
@@ -35,7 +33,6 @@ public class RestControllerAuth {
     private JwtGenerador jwtGenerador;
 
     @Autowired
-
     public RestControllerAuth(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RolRepository rolRepository, UsuariosRepository usuariosRepository, JwtGenerador jwtGenerador) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
@@ -75,12 +72,19 @@ public class RestControllerAuth {
     }
 
     @PostMapping("login")
-    public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                dtoLogin.getUsername(),dtoLogin.getPassword()
-        ));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerador.generarToken(authentication);
-        return new ResponseEntity<>(new DtoAuthRespuesta(token),HttpStatus.OK);
+    public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    dtoLogin.getUsername(), dtoLogin.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtGenerador.generarToken(authentication);
+            return new ResponseEntity<>(new DtoAuthRespuesta(token), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new DtoAuthRespuesta("Credenciales incorrectas"), HttpStatus.UNAUTHORIZED);
+        }
     }
+
+
+
+
 }

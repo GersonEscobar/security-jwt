@@ -24,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     public CustomUserDetailsService (UsuariosRepository usuariosRepository){
+        this.usuariosRepository = usuariosRepository;
     }
 
     //Sirve para traer la lista de autoridades

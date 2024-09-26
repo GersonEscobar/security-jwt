@@ -29,22 +29,41 @@ public class JwtGenerador {
     }
 
     //Metodo para extraer username a partir de un token
-    public String obtenerUsernameDeJwt(String token){
+//    public String obtenerUsernameDeJwt(String token){
+//        Claims claims = Jwts.parser()
+//                .setSigningKey(ConstantesSeguridad.JWT_FIRMA)
+//                .parseClaimsJwt(token)
+//                .getBody();
+//        return claims.getSubject();
+//    }
+
+    public String obtenerUsernameDeJwt(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(ConstantesSeguridad.JWT_FIRMA)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token) // Cambia parseClaimsJwt a parseClaimsJws
                 .getBody();
         return claims.getSubject();
     }
 
+
     //Metodo para validar el token
-    public  Boolean validarToken (String token){
-        try{
-            Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJwt(token);
+//    public  Boolean validarToken (String token){
+//        try{
+//            Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJwt(token);
+//            return true;
+//        } catch (Exception e) {
+//            throw new AuthenticationCredentialsNotFoundException("Jwt ha expirado o esta incorrecto");
+//        }
+//    }
+    public Boolean validarToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            throw new AuthenticationCredentialsNotFoundException("Jwt ha expirado o esta incorrecto");
+            throw new AuthenticationCredentialsNotFoundException("Jwt ha expirado o está incorrecto");
         }
     }
 
+
 }
+

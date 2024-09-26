@@ -59,26 +59,7 @@ public class SecurityConfig {
 //        return http.build();
 //    }
 
-//    @Bean
-//    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())  // Desactiva CSRF
-//                .exceptionHandling(exceptionHandling ->
-//                        exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint))  // Maneja excepciones
-//                .sessionManagement(sessionManagement ->
-//                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Configura sesiones
-//                .authorizeHttpRequests(authorize ->
-//                        authorize
-//                                .requestMatchers("/api/auth/**").permitAll()  // Permite acceso a las rutas de autenticación
-//                                .anyRequest().authenticated()  // Requiere autenticación para cualquier otra petición
-//                )
-//                .httpBasic(Customizer.withDefaults());  // Usa autenticación básica HTTP
-//
-//        // Agrega el filtro JWT antes del filtro de autenticación
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
+
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -97,3 +78,4 @@ public class SecurityConfig {
 
 
 }
+
