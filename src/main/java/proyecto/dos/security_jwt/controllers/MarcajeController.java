@@ -67,7 +67,7 @@ public class MarcajeController {
         return marcajeService.obtenerTodosLosMarcajes();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/ultimo/{username}")
     public ResponseEntity<?> obtenerUltimoMarcaje(@PathVariable String username) {
         Optional<Usuarios> usuarioOptional = usuarioService.obtenerUsuario(username);
@@ -79,7 +79,7 @@ public class MarcajeController {
         return new ResponseEntity<>("El usuario no existe", HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/paginados/")
     public Page<Marcaje> obtenerUsuariosPaginados(
             @RequestParam(defaultValue = "0") int page,

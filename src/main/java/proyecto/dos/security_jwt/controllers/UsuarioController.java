@@ -22,7 +22,6 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('USER')")
     public List<Usuarios> obtenerTodosLosUsuarios(){
         return  usuarioService.obtenerTodosLosUsuarios();
     }

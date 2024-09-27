@@ -52,6 +52,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Permitir rutas específicas
                         .requestMatchers(HttpMethod.GET,"/marcajes/").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/marcajes/paginados/").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/usuarios/paginados/").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/usuarios/").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated()) // Todas las demás rutas requieren autenticación
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // Añadir filtro JWT
                 .build();
