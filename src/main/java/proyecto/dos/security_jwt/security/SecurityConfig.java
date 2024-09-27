@@ -40,27 +40,6 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter();
     }
 
-//    @Bean
-//    SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-//        http
-//                .csrf().disable()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeHttpRequests() //toda peticion http debe ser autorizada
-//                .requestMatchers("/api/auth/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .httpBasic();
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
-
-
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -71,6 +50,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Política sin estado
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Permitir rutas específicas
+                        .requestMatchers("/marcajes/ultimo/{username}").hasRole("ADMIN")
+                        .requestMatchers("/marcajes/").hasRole("ADMIN")
+                        .requestMatchers("/marcajes/paginados/").hasRole("ADMIN")
                         .anyRequest().authenticated()) // Todas las demás rutas requieren autenticación
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // Añadir filtro JWT
                 .build();

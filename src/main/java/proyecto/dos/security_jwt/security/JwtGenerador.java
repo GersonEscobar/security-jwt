@@ -5,37 +5,55 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtGenerador {
 
     //Para crear el token por medio de la autenticacion
-    public String generarToken(Authentication authentication){
+//    public String generarToken(Authentication authentication){
+//        String username = authentication.getName();
+//        Date tiempoActual = new Date();
+//        Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_WXPIRATION_TOKEN);
+//
+//        //Para generar el token
+//        String token = Jwts.builder()
+//                .setSubject(username)
+//                .setIssuedAt(new Date())
+//                .setExpiration(expiracionToken)
+//                .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
+//                .compact();
+//        return  token;
+//    }
+    public String generarToken(Authentication authentication) {
         String username = authentication.getName();
+
+        // Extraer roles del usuario autenticado
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority) // Convertir a string
+                .collect(Collectors.toList());
+
         Date tiempoActual = new Date();
         Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_WXPIRATION_TOKEN);
 
-        //Para generar el token
+        // Generar el token
         String token = Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
+                .claim("roles", roles) // Incluir roles en el token
+                .setIssuedAt(tiempoActual)
                 .setExpiration(expiracionToken)
                 .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
                 .compact();
-        return  token;
+
+        return token;
     }
 
-    //Metodo para extraer username a partir de un token
-//    public String obtenerUsernameDeJwt(String token){
-//        Claims claims = Jwts.parser()
-//                .setSigningKey(ConstantesSeguridad.JWT_FIRMA)
-//                .parseClaimsJwt(token)
-//                .getBody();
-//        return claims.getSubject();
-//    }
+
 
     public String obtenerUsernameDeJwt(String token) {
         Claims claims = Jwts.parser()

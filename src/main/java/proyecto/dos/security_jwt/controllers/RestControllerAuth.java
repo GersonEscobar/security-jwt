@@ -22,9 +22,11 @@ import proyecto.dos.security_jwt.repositories.UsuariosRepository;
 import proyecto.dos.security_jwt.security.JwtGenerador;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/api/auth/")
+@RequestMapping("/api/auth")
 public class RestControllerAuth {
     private AuthenticationManager authenticationManager;
     private PasswordEncoder passwordEncoder;
@@ -42,7 +44,7 @@ public class RestControllerAuth {
     }
 
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<String>  registrar(@RequestBody DtoRegistro dtoRegistro){
         if(usuariosRepository.existsByUsername(dtoRegistro.getUsername())){
             return new ResponseEntity<>("El usuario ya existe, intenta con otro", HttpStatus.BAD_REQUEST);
@@ -57,7 +59,7 @@ public class RestControllerAuth {
     }
 
 
-    @PostMapping("registerAdmin")
+    @PostMapping("/registerAdmin")
     public ResponseEntity<String>  registrarAdmin(@RequestBody DtoRegistro dtoRegistro){
         if(usuariosRepository.existsByUsername(dtoRegistro.getUsername())){
             return new ResponseEntity<>("El usuario ya existe, intenta con otro", HttpStatus.BAD_REQUEST);
@@ -71,19 +73,36 @@ public class RestControllerAuth {
         return new ResponseEntity<>("Registro de admin exitoso", HttpStatus.OK);
     }
 
-    @PostMapping("login")
+//    @PostMapping("/login")
+//    public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin) {
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                    dtoLogin.getUsername(), dtoLogin.getPassword()));
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            String token = jwtGenerador.generarToken(authentication);
+//            return new ResponseEntity<>(new DtoAuthRespuesta(token), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(new DtoAuthRespuesta("Credenciales incorrectas"), HttpStatus.UNAUTHORIZED);
+//        }
+//    }
+
+    @PostMapping("/login")
     public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    dtoLogin.getUsername(), dtoLogin.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dtoLogin.getUsername(), dtoLogin.getPassword())
+            );
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Generar el token incluyendo roles
             String token = jwtGenerador.generarToken(authentication);
+
             return new ResponseEntity<>(new DtoAuthRespuesta(token), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new DtoAuthRespuesta("Credenciales incorrectas"), HttpStatus.UNAUTHORIZED);
         }
     }
-
 
 
 
