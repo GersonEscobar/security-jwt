@@ -30,27 +30,49 @@ public class JwtGenerador {
 //                .compact();
 //        return  token;
 //    }
+
+    // segunda
+//    public String generarToken(Authentication authentication) {
+//        String username = authentication.getName();
+//
+//        // Extraer roles del usuario autenticado
+//        List<String> roles = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority) // Convertir a string
+//                .collect(Collectors.toList());
+//
+//        Date tiempoActual = new Date();
+//        Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_WXPIRATION_TOKEN);
+//
+//        // Generar el token
+//        String token = Jwts.builder()
+//                .setSubject(username)
+//                .claim("roles", roles) // Incluir roles en el token
+//                .setIssuedAt(tiempoActual)
+//                .setExpiration(expiracionToken)
+//                .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
+//                .compact();
+//
+//        return token;
+//    }
+
     public String generarToken(Authentication authentication) {
         String username = authentication.getName();
-
-        // Extraer roles del usuario autenticado
-        List<String> roles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority) // Convertir a string
-                .collect(Collectors.toList());
-
         Date tiempoActual = new Date();
         Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_WXPIRATION_TOKEN);
 
+        // Obtener los roles del usuario
+        String roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
         // Generar el token
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(username)
-                .claim("roles", roles) // Incluir roles en el token
+                .claim("roles", roles) // Agregar roles al token
                 .setIssuedAt(tiempoActual)
                 .setExpiration(expiracionToken)
                 .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
                 .compact();
-
-        return token;
     }
 
 
@@ -64,15 +86,6 @@ public class JwtGenerador {
     }
 
 
-    //Metodo para validar el token
-//    public  Boolean validarToken (String token){
-//        try{
-//            Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJwt(token);
-//            return true;
-//        } catch (Exception e) {
-//            throw new AuthenticationCredentialsNotFoundException("Jwt ha expirado o esta incorrecto");
-//        }
-//    }
     public Boolean validarToken(String token) {
         try {
             Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
@@ -81,6 +94,12 @@ public class JwtGenerador {
             throw new AuthenticationCredentialsNotFoundException("Jwt ha expirado o está incorrecto");
         }
     }
+
+    public String obtenerRolesDeJwt(String token) {
+        Claims claims = Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token).getBody();
+        return claims.get("roles", String.class);
+    }
+
 
 
 }

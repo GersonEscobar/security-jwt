@@ -73,18 +73,6 @@ public class RestControllerAuth {
         return new ResponseEntity<>("Registro de admin exitoso", HttpStatus.OK);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin) {
-//        try {
-//            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                    dtoLogin.getUsername(), dtoLogin.getPassword()));
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            String token = jwtGenerador.generarToken(authentication);
-//            return new ResponseEntity<>(new DtoAuthRespuesta(token), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(new DtoAuthRespuesta("Credenciales incorrectas"), HttpStatus.UNAUTHORIZED);
-//        }
-//    }
 
     @PostMapping("/login")
     public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin) {

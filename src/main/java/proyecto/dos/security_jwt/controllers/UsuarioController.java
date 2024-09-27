@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import proyecto.dos.security_jwt.models.Usuarios;
 import proyecto.dos.security_jwt.services.UsuarioService;
@@ -21,6 +22,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('USER')")
     public List<Usuarios> obtenerTodosLosUsuarios(){
         return  usuarioService.obtenerTodosLosUsuarios();
     }

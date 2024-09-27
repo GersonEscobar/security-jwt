@@ -4,6 +4,7 @@ package proyecto.dos.security_jwt.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -50,9 +51,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Política sin estado
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Permitir rutas específicas
-                        .requestMatchers("/marcajes/ultimo/{username}").hasRole("ADMIN")
-                        .requestMatchers("/marcajes/").hasRole("ADMIN")
-                        .requestMatchers("/marcajes/paginados/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/marcajes/").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated()) // Todas las demás rutas requieren autenticación
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // Añadir filtro JWT
                 .build();

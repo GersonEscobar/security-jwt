@@ -36,17 +36,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = obtenerTokenDeSolicitud(request);
-        if (StringUtils.hasText(token) && jwtGenerador.validarToken(token)){
+        if (StringUtils.hasText(token) && jwtGenerador.validarToken(token)) {
             String username = jwtGenerador.obtenerUsernameDeJwt(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            List<String> userRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-            if (userRoles.contains("USER") || userRoles.contains("ADMIN")){
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
+
+            // Extraer roles del JWT si es necesario
+            String roles = jwtGenerador.obtenerRolesDeJwt(token); // Asegúrate de tener un método para obtener roles
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
         filterChain.doFilter(request, response);
-
     }
+
 }

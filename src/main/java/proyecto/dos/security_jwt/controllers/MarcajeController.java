@@ -61,7 +61,7 @@ public class MarcajeController {
         return new ResponseEntity<>("El usuario no existe", HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public List<Marcaje> obtenerTodosLosMarcajes(){
         return marcajeService.obtenerTodosLosMarcajes();
