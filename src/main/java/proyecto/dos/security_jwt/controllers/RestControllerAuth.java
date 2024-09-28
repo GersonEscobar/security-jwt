@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/auth")
+@CrossOrigin("http://localhost:4200")
 public class RestControllerAuth {
     private AuthenticationManager authenticationManager;
     private PasswordEncoder passwordEncoder;
@@ -45,18 +47,33 @@ public class RestControllerAuth {
 
 
     @PostMapping("/register")
-    public ResponseEntity<String>  registrar(@RequestBody DtoRegistro dtoRegistro){
-        if(usuariosRepository.existsByUsername(dtoRegistro.getUsername())){
+    public ResponseEntity<String> registrar(@RequestBody DtoRegistro dtoRegistro) {
+        if (usuariosRepository.existsByUsername(dtoRegistro.getUsername())) {
             return new ResponseEntity<>("El usuario ya existe, intenta con otro", HttpStatus.BAD_REQUEST);
         }
+
         Usuarios usuarios = new Usuarios();
         usuarios.setUsername(dtoRegistro.getUsername());
         usuarios.setPassword(passwordEncoder.encode(dtoRegistro.getPassword()));
+        usuarios.setNombre(dtoRegistro.getNombre());
+        usuarios.setApellido(dtoRegistro.getApellido());
+        usuarios.setEmail(dtoRegistro.getEmail());
+        usuarios.setTelefono(dtoRegistro.getTelefono());
+        usuarios.setPerfil(dtoRegistro.getPerfil());
+
         Roles roles = rolRepository.findByName("USER").get();
         usuarios.setRoles(Collections.singletonList(roles));
-        usuariosRepository.save(usuarios);
+        try {
+            usuariosRepository.save(usuarios);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error al guardar el usuario: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
         return new ResponseEntity<>("Registro de usuario exitoso", HttpStatus.OK);
     }
+
 
 
     @PostMapping("/registerAdmin")
@@ -67,6 +84,12 @@ public class RestControllerAuth {
         Usuarios usuarios = new Usuarios();
         usuarios.setUsername(dtoRegistro.getUsername());
         usuarios.setPassword(passwordEncoder.encode(dtoRegistro.getPassword()));
+        usuarios.setNombre(dtoRegistro.getNombre());
+        usuarios.setApellido(dtoRegistro.getApellido());
+        usuarios.setEmail(dtoRegistro.getEmail());
+        usuarios.setTelefono(dtoRegistro.getTelefono());
+        usuarios.setPerfil(dtoRegistro.getPerfil());
+
         Roles roles = rolRepository.findByName("ADMIN").get();
         usuarios.setRoles(Collections.singletonList(roles));
         usuariosRepository.save(usuarios);

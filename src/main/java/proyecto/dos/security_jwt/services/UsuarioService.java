@@ -39,4 +39,15 @@ public class UsuarioService {
     public Page<Usuarios> obtenerUsuariosPaginados(Pageable pageable) {
         return usuariosRepository.findAll(pageable);
     }
+
+    public Optional<Usuarios> guardarUsuario(Usuarios usuario){
+        Optional<Usuarios> usuarioLocal = usuariosRepository.findByUsername(usuario.getUsername());
+        if(usuarioLocal.isPresent()){
+            throw new  RuntimeException("El usuario ya esta presente");
+        }
+        else {
+            usuarioLocal = Optional.of(usuariosRepository.save(usuario));
+        }
+        return usuarioLocal;
+    }
 }
