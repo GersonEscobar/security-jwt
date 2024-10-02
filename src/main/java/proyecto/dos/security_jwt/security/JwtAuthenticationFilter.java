@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
             // Extraer roles del JWT si es necesario
-            String roles = jwtGenerador.obtenerRolesDeJwt(token); // Asegúrate de tener un método para obtener roles
+            String roles = jwtGenerador.obtenerRolesDeJwt(token);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());

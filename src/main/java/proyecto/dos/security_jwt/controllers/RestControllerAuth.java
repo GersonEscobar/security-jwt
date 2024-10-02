@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/auth")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RestControllerAuth {
     private AuthenticationManager authenticationManager;
     private PasswordEncoder passwordEncoder;

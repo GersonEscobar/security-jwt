@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/marcajes")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MarcajeController {
 
     @Autowired
@@ -25,18 +26,6 @@ public class MarcajeController {
 
     @Autowired
     private UsuarioService usuarioService;
-
-//    @PostMapping("/entrada/{username}")
-//    public ResponseEntity<?> registrarEntrada(@PathVariable String username) {
-//        Optional<Usuarios> usuarioOptional = usuarioService.obtenerUsuario(username);
-//        if (usuarioOptional.isPresent()) {
-//            // Extraemos el usuario del Optional
-//            Usuarios usuario = usuarioOptional.get();
-//            Marcaje marcaje = marcajeService.registrarEntrada(usuario);
-//            return new ResponseEntity<>(marcaje, HttpStatus.CREATED);
-//        }
-//        return new ResponseEntity<>("El usuario no existe", HttpStatus.NOT_FOUND);
-//    }
 
     @PostMapping("/entrada/{username}")
     public ResponseEntity<?> registrarEntrada(@PathVariable String username) {
