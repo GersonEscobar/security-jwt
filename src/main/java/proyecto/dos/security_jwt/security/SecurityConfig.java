@@ -54,18 +54,22 @@ public class SecurityConfig implements WebMvcConfigurer {
         return http
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)) // Manejar excepciones
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Política sin estado
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Permitir rutas específicas
-                        .requestMatchers(HttpMethod.GET,"/marcajes/entrada/").hasAnyAuthority("USER")
-                        .requestMatchers(HttpMethod.GET,"/marcajes/salida/").hasAnyAuthority("USER")
-                        .requestMatchers(HttpMethod.GET,"/marcajes/ultimo/").hasAnyAuthority("USER")
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/marcajes/entrada/**").hasAnyAuthority("USER")
+                        .requestMatchers(HttpMethod.GET,"/marcajes/entrada/**").hasAnyAuthority("USER")
+                        .requestMatchers(HttpMethod.POST,"/marcajes/salida/**").hasAnyAuthority("USER")
+                        .requestMatchers(HttpMethod.GET,"/marcajes/salida/**").hasAnyAuthority("USER")
+                        .requestMatchers(HttpMethod.GET,"/marcajes/ultimo/**").hasAnyAuthority("USER")
+                        .requestMatchers(HttpMethod.POST,"/marcajes/ultimo/**").hasAnyAuthority("USER")
                         .requestMatchers(HttpMethod.GET,"/marcajes/**").hasAnyAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/usuarios/**").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .cors(Customizer.withDefaults())
                 .build();
     }
 
@@ -74,22 +78,12 @@ public class SecurityConfig implements WebMvcConfigurer {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("Authorization", "Content-Type")
-                .allowedHeaders("*")
-                .allowCredentials(true);
     }
 }
 

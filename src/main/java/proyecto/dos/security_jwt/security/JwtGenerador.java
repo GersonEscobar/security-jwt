@@ -15,46 +15,6 @@ import java.util.stream.Collectors;
 @Component
 public class JwtGenerador {
 
-    //Para crear el token por medio de la autenticacion
-//    public String generarToken(Authentication authentication){
-//        String username = authentication.getName();
-//        Date tiempoActual = new Date();
-//        Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_WXPIRATION_TOKEN);
-//
-//        //Para generar el token
-//        String token = Jwts.builder()
-//                .setSubject(username)
-//                .setIssuedAt(new Date())
-//                .setExpiration(expiracionToken)
-//                .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
-//                .compact();
-//        return  token;
-//    }
-
-    // segunda
-//    public String generarToken(Authentication authentication) {
-//        String username = authentication.getName();
-//
-//        // Extraer roles del usuario autenticado
-//        List<String> roles = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority) // Convertir a string
-//                .collect(Collectors.toList());
-//
-//        Date tiempoActual = new Date();
-//        Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_WXPIRATION_TOKEN);
-//
-//        // Generar el token
-//        String token = Jwts.builder()
-//                .setSubject(username)
-//                .claim("roles", roles) // Incluir roles en el token
-//                .setIssuedAt(tiempoActual)
-//                .setExpiration(expiracionToken)
-//                .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA)
-//                .compact();
-//
-//        return token;
-//    }
-
     public String generarToken(Authentication authentication) {
         String username = authentication.getName();
         Date tiempoActual = new Date();
