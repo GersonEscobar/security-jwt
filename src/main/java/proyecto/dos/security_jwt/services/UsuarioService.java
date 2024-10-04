@@ -1,5 +1,6 @@
 package proyecto.dos.security_jwt.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,4 +66,14 @@ public class UsuarioService {
 
         return usuariosRepository.save(usuarioExistente);
     }
+
+    public void eliminarUsuarioPorUsername(String username) {
+        Optional<Usuarios> usuarioOptional = usuariosRepository.findByUsername(username);
+        if (usuarioOptional.isPresent()) {
+            usuariosRepository.delete(usuarioOptional.get());
+        } else {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        }
+    }
+
 }

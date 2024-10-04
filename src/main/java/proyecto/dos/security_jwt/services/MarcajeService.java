@@ -52,4 +52,6 @@ public class MarcajeService {
     public Page<Marcaje> obtenerMarcajesPaginados(Pageable pageable) {
         return marcajeRepository.findAll(pageable);
     }
+
+
 }

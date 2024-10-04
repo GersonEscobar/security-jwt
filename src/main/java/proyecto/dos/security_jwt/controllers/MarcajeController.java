@@ -81,6 +81,7 @@ public class MarcajeController {
     }
 
 
+
     @GetMapping("/paginados/")
     public Page<Marcaje> obtenerUsuariosPaginados(
             @RequestParam(defaultValue = "0") int page,
