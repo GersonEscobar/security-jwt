@@ -1,6 +1,7 @@
 package proyecto.dos.security_jwt.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,18 @@ public class UsuarioController {
         try {
             Optional<Usuarios> usuario = usuarioService.obtenerUsuarioPorId(usuarioId);
             return new ResponseEntity<>(usuario, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{usuarioId}")
+    public ResponseEntity<Usuarios> actualizarUsuario(
+            @PathVariable("usuarioId") Long usuarioId,
+            @RequestBody Usuarios usuarioActualizado) {
+        try {
+            Usuarios usuarioActualizadoEnDb = usuarioService.actualizarUsuario(usuarioId, usuarioActualizado);
+            return new ResponseEntity<>(usuarioActualizadoEnDb, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

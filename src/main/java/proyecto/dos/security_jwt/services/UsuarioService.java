@@ -50,4 +50,19 @@ public class UsuarioService {
         }
         return usuarioLocal;
     }
+
+    public  Usuarios actualizarUsuario(Long usuarioId, Usuarios usuarioActualizado) {
+        Usuarios usuarioExistente = usuariosRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuarioExistente.setUsername(usuarioActualizado.getUsername());
+        usuarioExistente.setPassword(usuarioActualizado.getPassword());
+        usuarioExistente.setNombre(usuarioActualizado.getNombre());
+        usuarioExistente.setApellido(usuarioActualizado.getApellido());
+        usuarioExistente.setEmail(usuarioActualizado.getEmail());
+        usuarioExistente.setTelefono(usuarioActualizado.getTelefono());
+        usuarioExistente.setEnabled(usuarioActualizado.isEnabled());
+        usuarioExistente.setPerfil(usuarioActualizado.getPerfil());
+
+        return usuariosRepository.save(usuarioExistente);
+    }
 }
