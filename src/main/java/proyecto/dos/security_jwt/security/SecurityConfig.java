@@ -52,7 +52,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
+                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
@@ -70,14 +70,14 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.GET,"/**").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("http://18.219.196.79", "http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));

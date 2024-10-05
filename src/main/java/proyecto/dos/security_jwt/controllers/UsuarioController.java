@@ -1,5 +1,6 @@
 package proyecto.dos.security_jwt.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "http://18.219.196.79"})
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
@@ -68,8 +69,13 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/username/{username}")
-    public void eliminarUsuarioPorUsername(@PathVariable("username") String username) {
-        usuarioService.eliminarUsuarioPorUsername(username);
+    public ResponseEntity<String> eliminarUsuarioPorUsername(@PathVariable("username") String username) {
+        try {
+            usuarioService.eliminarUsuarioPorUsername(username);
+            return ResponseEntity.ok("Usuario eliminado exitosamente");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
     }
 
 }
